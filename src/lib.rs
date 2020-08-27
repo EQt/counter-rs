@@ -165,7 +165,7 @@ use std::ops::{Add, AddAssign, BitAnd, BitOr, Deref, DerefMut, Index, IndexMut, 
 
 type CounterMap<T, N> = HashMap<T, N>;
 
-#[derive(Clone, PartialEq, Eq, Debug, Default)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Counter<T: Hash + Eq, N = usize> {
     map: CounterMap<T, N>,
     // necessary for `Index::index` since we cannot declare generic `static` variables.
@@ -239,6 +239,16 @@ where
                 self.map.remove(&item);
             }
         }
+    }
+}
+
+impl<T, N> Default for Counter<T, N>
+where
+    T: Hash + Eq,
+    N: PartialOrd + AddAssign + SubAssign + Zero + One,
+{
+    fn default() -> Counter<T, N> {
+        Counter::new()
     }
 }
 
